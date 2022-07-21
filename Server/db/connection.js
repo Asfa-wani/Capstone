@@ -1,6 +1,7 @@
-const { urlencoded } = require("express");
+//IMPORT MONGOOSE
 const mongoose = require("mongoose");
 
+//CREATING CONNECTION TO MONGO DB
 module.exports = () => {
     try {
         mongoose.connect(
