@@ -2,10 +2,15 @@
  * IMPORTING DEPENDENCIES 
  */
 const express = require("express");
-require("dotenv");
+require("dotenv").config();
 const cors = require("cors");
+const connection = require("./db/connection");
 const PORT = process.env.PORT || 3000;
 
+/**
+ * DB CONNECTION
+ */
+connection()
 
 /*
  * INITIALIZING EXPRESS APP
