@@ -1,3 +1,3 @@
 # Capstone
-##Dream Travels
+#Dream Travels
 An Adventure travel website...
