@@ -20,7 +20,7 @@ const loginUser = async(req, res) => {
         if (!validPassword)
             return res.status(401).send({ message: "Invalid email or password" });
 
-        console.log("successful")
+        //console.log("successful")
         const token = user.genAuthToken();
         res.status(200).send({ data: token, message: "Logged in Successfully" })
     } catch (error) {
@@ -30,6 +30,7 @@ const loginUser = async(req, res) => {
 
 module.exports = { loginUser };
 
+//VALIDATION FUNCTION USING JOI TO VALIDATE LOGIN DETAILS
 const validate = (data) => {
     const schema = joi.object({
         email: joi.string().email().required().label("Email"),

@@ -6,9 +6,9 @@ const bcrypt = require("bcrypt");
 const registerUser = async(req, res) => {
     try {
         //VALIDATE THE INPUT DATA
-        console.log("here1");
+        //console.log("here1");
         const { error } = validate(req.body);
-        console.log("here2");
+        //console.log("here2");
         if (error)
             return res.status(401).send({ message: error.details[0].message });
 
