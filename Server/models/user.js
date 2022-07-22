@@ -28,9 +28,9 @@ const validate = (data) => {
     const schema = joi.object({
         name: joi.string().required().label("Name"),
         email: joi.string().email().required().label("Email"),
-        password: joi.passwordComplexity().required().label("Password"),
+        password: passwordComplexity().required().label("Password"),
         address: joi.string().required().label("Address"),
-        phone: joi.string().lentgh(10).required().label("Phone"),
+        phone: joi.string().length(10).required().label("Phone"),
         age: joi.number().required().label("Age"),
 
     });
@@ -38,4 +38,4 @@ const validate = (data) => {
 }
 
 //EXPORTING MODEL
-module.exports = { User, validate };
+module.exports = { User, validate }
