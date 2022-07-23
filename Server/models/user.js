@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema({
     address: { type: Object, required: true, }, //proper address ,not string, collection
     phone: { type: String, maxlength: 10, required: true, },
     age: { type: Number, required: true, },
+    isAdmin: {
+        type: Boolean,
+        default: false
+    }
 });
 
 //SCHEMA METHOD TO GENERATE JWT TOKEN FOR AUTHORIZATION
