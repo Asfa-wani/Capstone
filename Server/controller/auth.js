@@ -43,12 +43,14 @@ const registerUser = async(req, res) => {
 const loginUser = async(req, res) => {
     try {
         //VALIDATE LOGIN CREDENTIALS
-        const { error } = validate(req.body);
+        const { error } = validateLogin(req.body);
+
         if (error)
             return res.status(400).send({ message: error.details[0].message });
 
         //SEARCH USER IN DB
         const user = await User.findOne({ email: req.body.email });
+
         if (!user)
             return res.status(401).send({ message: "Invalid email  or password" });
 
@@ -67,10 +69,10 @@ const loginUser = async(req, res) => {
 module.exports = { loginUser, registerUser };
 
 //VALIDATION FUNCTION USING JOI TO VALIDATE LOGIN DETAILS
-const validatelogin = (data) => {
+const validateLogin = (data) => {
     const schema = joi.object({
         email: joi.string().email().required().label("Email"),
         password: joi.string().required().label("Password"),
     });
-    return schema.validatelogin(data);
+    return schema.validate(data);
 }
