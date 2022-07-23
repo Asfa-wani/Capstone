@@ -3,13 +3,14 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const joi = require("joi");
 const passwordComplexity = require("joi-password-complexity");
+const { object } = require("joi");
 
 //USER SCHEMA
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true, },
     email: { type: String, required: true, },
     password: { type: String, required: true, },
-    address: { type: String, required: true, },//proper address ,not string, collection
+    address: { type: Object, required: true, }, //proper address ,not string, collection
     phone: { type: String, maxlength: 10, required: true, },
     age: { type: Number, required: true, },
 });
@@ -29,7 +30,7 @@ const validate = (data) => {
         name: joi.string().required().label("Name"),
         email: joi.string().email().required().label("Email"),
         password: passwordComplexity().required().label("Password"),
-        address: joi.string().required().label("Address"),
+        address: joi.object().required().label("Address"),
         phone: joi.string().length(10).required().label("Phone"),
         age: joi.number().required().label("Age"),
 
