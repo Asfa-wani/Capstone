@@ -1,5 +1,7 @@
+//IMPORT
 const mongoose = require("mongoose");
 
+//CREATE PRODUCT SCHEMA
 const productSchema = new mongoose.Schema({
 
     title: { type: String, required: true, unique: true },
@@ -9,5 +11,6 @@ const productSchema = new mongoose.Schema({
     url: { type: String, required: true }
 });
 
+//CREATE AND EXPORT PRODUCT MODEL
 const Product = mongoose.model("product", productSchema);
 module.exports = { Product };
