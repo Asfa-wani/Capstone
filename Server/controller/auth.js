@@ -50,7 +50,7 @@ const loginUser = async(req, res) => {
 
         //SEARCH USER IN DB
         const user = await User.findOne({ email: req.body.email });
-
+        console.log(req.profile)
         if (!user)
             return res.status(401).send({ message: "Invalid email  or password" });
 
@@ -60,12 +60,33 @@ const loginUser = async(req, res) => {
 
         //console.log("successful")
         const token = user.genAuthToken();
+        res.cookie("t", token, { expire: new Date() + 9999 });
         res.status(200).send({ data: token, message: "Logged in Successfully" })
     } catch (error) {
         return res.status(500).send({ message: "Internal server error" });
     }
 };
+/* const expressJwt = require("express-jwt");
+const requireSignin = expressJwt({
+    secret: process.env.JWT_SEC,
+    userProperty: "auth",
+});
 
+
+const isAuth = async(req, res, next) => {
+    let user = req.profile && req.auth && req.profile._id == req.auth._id;
+    if (!user)
+        return res.status(403).send({ message: "Login to proceed" });
+
+    next();
+};
+
+const isAdmin = async(req, res, next) => {
+    if (req.profile.role === 0)
+        return res.status(403).send({ message: "Admin resources, Acess denied!" });
+    next();
+};
+ */
 module.exports = { loginUser, registerUser };
 
 //VALIDATION FUNCTION USING JOI TO VALIDATE LOGIN DETAILS

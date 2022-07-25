@@ -13,10 +13,7 @@ const userSchema = new mongoose.Schema({
     address: { type: Object, required: true, }, //proper address ,not string, collection
     phone: { type: String, maxlength: 10, required: true, },
     age: { type: Number, required: true, },
-    isAdmin: {
-        type: Boolean,
-        default: false
-    }
+    role: { type: Number, default: 0 },
 });
 
 //SCHEMA METHOD TO GENERATE JWT TOKEN FOR AUTHORIZATION
@@ -37,6 +34,7 @@ const validate = (data) => {
         address: joi.object().required().label("Address"),
         phone: joi.string().length(10).required().label("Phone"),
         age: joi.number().required().label("Age"),
+        role: joi.number().required().label("Role"),
 
     });
     return schema.validate(data);
