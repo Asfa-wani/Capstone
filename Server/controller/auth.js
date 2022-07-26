@@ -50,7 +50,6 @@ const loginUser = async(req, res) => {
 
         //SEARCH USER IN DB
         const user = await User.findOne({ email: req.body.email });
-        console.log(req.profile)
         if (!user)
             return res.status(401).send({ message: "Invalid email  or password" });
 
@@ -60,7 +59,9 @@ const loginUser = async(req, res) => {
 
         //console.log("successful")
         const token = user.genAuthToken();
-        res.cookie("t", token, { expire: new Date() + 9999 });
+        //PERSIST THE TOKEN WITH EXPIRY DATE AS ACCESS_TOKEN IN COOKIES
+        res.cookie("access_token", token, { expire: new Date() + 9999 });
+
         res.status(200).send({ data: token, message: "Logged in Successfully" });
     } catch (error) {
         return res.status(500).send({ message: "Internal server error" });
@@ -69,7 +70,7 @@ const loginUser = async(req, res) => {
 
 //FUNCTION FOR SIGNING OUT
 const logoutUser = async(req, res) => {
-    res.clearCookie("t");
+    res.clearCookie("access_token");
     res.status(200).send({ message: "Sign out successful!" });
 }
 
