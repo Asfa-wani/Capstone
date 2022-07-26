@@ -4,9 +4,9 @@ const mongoose = require("mongoose");
 //CREATING ADVENTURE SCHEMA
 const adventureSchema = new mongoose.Schema({
 
-    title: { type: String, required: true, unique },
+    title: { type: String, required: true, unique: true },
     description: { type: String, required: true },
-    category: { type: Array },
+    category: { type: Array, required: true },
     image: { type: String, required: true }
 
 });
