@@ -55,7 +55,7 @@ const updateAdventure = async(req, res) => {
 const deleteAdventure = async(req, res) => {
     try {
         await Adventure.findByIdAndDelete({ _id: req.params.id });
-        res.status(200).send({ message: "Blog deleted successfully" });
+        res.status(200).send({ message: "Adventure deleted successfully" });
     } catch (error) {
         res.status(500).send({ message: "Server error" });
     }
