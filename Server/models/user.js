@@ -34,7 +34,7 @@ const validate = (data) => {
         address: joi.object().required().label("Address"),
         phone: joi.string().length(10).required().label("Phone"),
         age: joi.number().required().label("Age"),
-        role: joi.number().required().label("Role"),
+
 
     });
     return schema.validate(data);

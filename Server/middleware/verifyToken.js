@@ -1,5 +1,5 @@
 const expressJwt = require("express-jwt");
-const { User, validate } = require("../models/user");
+
 const requireSignin = expressJwt({
     secret: process.env.JWT_SEC,
     userProperty: "auth",

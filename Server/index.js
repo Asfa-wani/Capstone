@@ -6,6 +6,7 @@ require("dotenv").config();
 const cors = require("cors");
 const connection = require("./db/connection");
 const userRoutes = require("./routes/user");
+const authRoutes = require("./routes/auth");
 const cookieParser = require("cookie-parser");
 const PORT = process.env.PORT || 3000;
 
@@ -30,6 +31,7 @@ app.use(cookieParser());
  * CREATING APIS
  */
 app.use("/api/user", userRoutes);
+app.use("/api/auth", authRoutes);
 
 /*
  * STARTING APP
