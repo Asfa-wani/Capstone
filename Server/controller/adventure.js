@@ -7,7 +7,7 @@ const joi = require("joi");
 // IMPORT
 
 
-//FUNCTION TO CREATE A REVIEW
+//FUNCTION TO CREATE A ADVENTURE
 const createAdventure = async(req, res) => {
     try {
 
@@ -18,12 +18,12 @@ const createAdventure = async(req, res) => {
         if (error)
             return res.status(409).send({ message: error.details[0].message });
 
-        //CHECK IF THE REVIEW ALREADY EXISTS BY THIS USER
+        //CHECK IF THE ADVENTURE ALREADY EXISTS BY THIS USER
         const adventure = await Adventure.findOne({ title: title });
         if (adventure)
             return res.status(409).send({ message: "Adventure already exists" });
 
-        //IF NOT EXISTING THEN POST THE REVIEW
+        //IF NOT EXISTING THEN POST THE ADVENTURE
         await new Adventure({ title: title, description: description, category: category, image: image }).save();
         res.status(200).send({ message: "Adventure added successfully" });
 
@@ -32,7 +32,7 @@ const createAdventure = async(req, res) => {
     }
 };
 
-//FUNCTION TO UPDATE A REVIEW
+//FUNCTION TO UPDATE A ADVENTURE
 const updateAdventure = async(req, res) => {
     try {
 
@@ -43,7 +43,7 @@ const updateAdventure = async(req, res) => {
         if (error)
             return res.status(409).send({ message: error.details[0].message });
 
-        //CHECK IF THE REVIEW ALREADY EXISTS BY THIS USER
+        //CHECK IF THE ADVENTURE ALREADY EXISTS BY THIS USER
         await Adventure.findByIdAndUpdate({ _id: req.params.id }, { title: title, description: description, category: category, image: image });
         res.status(200).send({ message: "Adventure updated successfully" });
     } catch (error) {
@@ -51,7 +51,7 @@ const updateAdventure = async(req, res) => {
     }
 };
 
-//FUNCTION TO DELETE REVIEW
+//FUNCTION TO DELETE ADVENTURE
 const deleteAdventure = async(req, res) => {
     try {
         await Adventure.findByIdAndDelete({ _id: req.params.id });
