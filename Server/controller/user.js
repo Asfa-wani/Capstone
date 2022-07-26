@@ -1,4 +1,6 @@
-//USER CRUD OPERATIONS
+/*
+ * CRUD OPERATIONS FOR USER 
+ */
 
 //IMPORT STATEMENTS
 const joi = require("joi");

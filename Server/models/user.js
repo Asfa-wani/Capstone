@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
     name: { type: String, required: true, },
     email: { type: String, required: true, },
     password: { type: String, required: true, },
-    address: { type: Object, required: true, }, //proper address ,not string, collection
+    address: { type: Object, required: true, },
     phone: { type: String, maxlength: 10, required: true, },
     age: { type: Number, required: true, },
     role: { type: Number, default: 0 },
