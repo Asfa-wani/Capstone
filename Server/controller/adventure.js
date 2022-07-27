@@ -1,11 +1,30 @@
 /*
  * CRUD OPERATIONS FOR ADVENTURES (ADMIN ONLY)
  */
-
+// IMPORT
 const { Adventure } = require("../models/Adventure");
 const joi = require("joi");
-// IMPORT
 
+//FUNCTION TO FIND THE ADVENTURE BY ID
+
+const adventureById = (req, res, next, id) => {
+    Adventure.findById(id).exec((err, adventure) => {
+        if (err || !adventure) {
+            return res.status(400).json({
+                error: 'Destination not found'
+            });
+        }
+        req.adventure = adventure;
+        next();
+    });
+};
+
+//FUNCTION TO FIND THE ADVENTURE
+
+const readAdventure = async(req, res) => {
+    adventure = req.adventure;
+    res.status(200).send(adventure);
+}
 
 //FUNCTION TO CREATE A ADVENTURE
 const createAdventure = async(req, res) => {
@@ -60,7 +79,7 @@ const deleteAdventure = async(req, res) => {
         res.status(500).send({ message: "Server error" });
     }
 }
-module.exports = { createAdventure, updateAdventure, deleteAdventure };
+module.exports = { createAdventure, updateAdventure, deleteAdventure, readAdventure, adventureById };
 
 // JOI VALIDATION FUNCTION
 const validateAdventure = (data) => {

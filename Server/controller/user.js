@@ -23,6 +23,14 @@ const userById = (req, res, next, id) => {
     });
 };
 
+//FUNCTION TO FIND THE USER
+
+const readUser = async(req, res) => {
+    user = req.profile;
+    res.status(200).send(user);
+}
+
+
 //FUNCTION TO UPDATE USER INFO
 const updateUser = async(req, res) => {
     try {
@@ -64,7 +72,7 @@ const deleteUser = async(req, res) => {
     }
 }
 
-module.exports = { updateUser, deleteUser, userById };
+module.exports = { updateUser, deleteUser, userById, readUser };
 //VALIDATE INFO FROM USER USING JOI VALIDATION
 const validateUpdate = (data) => {
     const schema = joi.object({

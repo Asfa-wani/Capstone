@@ -1,11 +1,30 @@
 /*
  * CRUD OPERATIONS FOR PRODUCTS (ADMIN ONLY)
  */
-
+// IMPORT
 const { Product } = require("../models/Product");
 const joi = require("joi");
-// IMPORT
 
+//FUNCTION TO FIND THE USER BY ID
+
+const productById = (req, res, next, id) => {
+    Product.findById(id).exec((err, product) => {
+        if (err || !product) {
+            return res.status(400).json({
+                error: 'Product not found'
+            });
+        }
+        req.product = product;
+        next();
+    });
+};
+
+//FUNCTION TO FIND THE USER
+
+const readProduct = async(req, res) => {
+    product = req.product;
+    res.status(200).send(product);
+}
 
 //FUNCTION TO CREATE A PRODUCT
 const createProduct = async(req, res) => {
@@ -60,7 +79,7 @@ const deleteProduct = async(req, res) => {
         res.status(500).send({ message: "Server error" });
     }
 }
-module.exports = { createProduct, updateProduct, deleteProduct };
+module.exports = { createProduct, updateProduct, deleteProduct, productById, readProduct };
 
 // JOI VALIDATION FUNCTION
 const validateProduct = (data) => {
