@@ -12,7 +12,7 @@ const registerUser = async(req, res) => {
         const { error } = validate(req.body);
         //console.log("here2");
         if (error)
-            return res.status(401).send({ message: error.details[0].message });
+            return res.status(409).send({ message: error.details[0].message });
 
         //console.log("here1");
         const user = await User.findOne({ email: req.body.email });

@@ -5,7 +5,7 @@
 const { Product } = require("../models/Product");
 const joi = require("joi");
 
-//FUNCTION TO FIND THE USER BY ID
+//FUNCTION TO FIND THE PRODUCT BY ID
 
 const productById = (req, res, next, id) => {
     Product.findById(id).exec((err, product) => {
@@ -19,11 +19,24 @@ const productById = (req, res, next, id) => {
     });
 };
 
-//FUNCTION TO FIND THE USER
+//FUNCTION TO FIND THE PRODUCT
 
 const readProduct = async(req, res) => {
     product = req.product;
     res.status(200).send(product);
+}
+
+//FUNCTION TO FIND ALL THE PRODUCTS
+
+const readAllProdocts = async(req, res) => {
+    try {
+        const products = await Product.find({});
+        if (!products)
+            return res.status(404).send({ message: "No products found" });
+        res.status(200).send(products);
+    } catch (error) {
+        res.status(500).send({ message: "Server error" });
+    }
 }
 
 //FUNCTION TO CREATE A PRODUCT
@@ -79,7 +92,7 @@ const deleteProduct = async(req, res) => {
         res.status(500).send({ message: "Server error" });
     }
 }
-module.exports = { createProduct, updateProduct, deleteProduct, productById, readProduct };
+module.exports = { createProduct, updateProduct, deleteProduct, productById, readProduct, readAllProdocts };
 
 // JOI VALIDATION FUNCTION
 const validateProduct = (data) => {
