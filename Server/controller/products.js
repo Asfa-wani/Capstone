@@ -2,6 +2,8 @@
  * CRUD OPERATIONS FOR PRODUCTS (ADMIN ONLY)
  */
 // IMPORT
+
+const fs = require("fs");
 const { Product } = require("../models/product");
 const joi = require("joi");
 
@@ -69,24 +71,25 @@ const readProductsCategory = async(req, res) => {
     }
 }
 
+
 //FUNCTION TO CREATE A PRODUCT
 const createProduct = async(req, res) => {
     try {
 
         //EXTRACT DATA FROM REQUEST
-        const { title, description, image, prodCategory, adventCategory, url } = req.body;
+        const { title, description, image, category, url } = req.body;
         //VALIDATE DATA
-        const { error } = validateProduct({ title, description, image, prodCategory, adventCategory, url });
+        const { error } = validateProduct({ title, description, image, category, url });
         if (error)
             return res.status(409).send({ message: error.details[0].message });
 
         //CHECK IF THE PRODUCT ALREADY EXISTS BY THIS USER
-        const product = await Product.findOne(req.body);
-        if (product)
+        const adventure = await Product.findOne({ title: title });
+        if (adventure)
             return res.status(409).send({ message: "Product already exists" });
 
         //IF NOT EXISTING THEN POST THE PRODUCT
-        await new Product(req.body).save();
+        await new Product({ title: title, description: description, image: image, category: category, url: url }).save();
         res.status(200).send({ message: "Product added successfully" });
 
     } catch (error) {
@@ -99,14 +102,14 @@ const updateProduct = async(req, res) => {
     try {
 
         //EXTRACT DATA FROM REQUEST
-        const { title, description, image, prodCategory, adventCategory, url } = req.body;
+        const { title, description, image, category, url } = req.body;
         //VALIDATE DATA
-        const { error } = validateProduct({ title, description, image, prodCategory, adventCategory, url });
+        const { error } = validateProduct({ title, description, image, category, url });
         if (error)
             return res.status(409).send({ message: error.details[0].message });
 
         //CHECK IF THE PRODUCT ALREADY EXISTS BY THIS USER
-        await Product.findByIdAndUpdate({ _id: req.params.id }, req.body);
+        await Product.findByIdAndUpdate({ _id: req.params.id }, { title: title, description: description, image: image, category: category, url: url });
         res.status(200).send({ message: "Product updated successfully" });
     } catch (error) {
         res.status(500).send({ message: "server error" });
@@ -129,9 +132,8 @@ const validateProduct = (data) => {
     const schema = joi.object({
         title: joi.string().required().label("Title"),
         description: joi.string().required().label("Blog"),
+        category: joi.array().required().label("Category"),
         image: joi.string().required().label("Image"),
-        prodCategory: joi.string().required().label("Product Category"),
-        adventCategory: joi.string().required().label("Product Category"),
         url: joi.string().required().label("URL")
     });
 

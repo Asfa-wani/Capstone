@@ -11,8 +11,7 @@ const reviewRoutes = require("./routes/review");
 const travelBlogRoutes = require("./routes/travelBlog");
 const adventureRoutes = require("./routes/adventure");
 const productsRoutes = require("./routes/products");
-const prodCategoryRoutes = require("./routes/productCategory");
-const adventCategoryRoutes = require("./routes/adventureCategory");
+const userExperienceRoutes = require("./routes/userExperience");
 const cookieParser = require("cookie-parser");
 const PORT = process.env.PORT || 3000;
 
@@ -42,9 +41,7 @@ app.use("/api/review", reviewRoutes);
 app.use("/api/travelBlog", travelBlogRoutes);
 app.use("/api/adventure", adventureRoutes);
 app.use("/api/products", productsRoutes);
-app.use("/api/productCategory", prodCategoryRoutes);
-app.use("/api/adventureCategory", adventCategoryRoutes);
-
+app.use("/api/userExperience", userExperienceRoutes);
 /*
  * STARTING APP
  */
