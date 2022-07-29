@@ -2,7 +2,7 @@
  * CRUD OPERATIONS FOR ADVENTURES (ADMIN ONLY)
  */
 // IMPORT
-const { Adventure } = require("../models/Adventure");
+const { Adventure } = require("../models/adventure");
 const joi = require("joi");
 
 //FUNCTION TO FIND THE ADVENTURE BY ID

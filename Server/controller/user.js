@@ -25,7 +25,7 @@ const userById = (req, res, next, id) => {
 
 //FUNCTION TO FIND THE USER
 
-const readUser = async(req, res) => {
+const readUser = (req, res) => {
     user = req.profile;
     res.status(200).send(user);
 }
