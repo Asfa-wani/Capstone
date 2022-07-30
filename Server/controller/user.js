@@ -7,6 +7,7 @@ const joi = require("joi");
 const { User } = require("../models/user");
 const passwordComplexity = require("joi-password-complexity");
 const bcrypt = require("bcrypt");
+const { Bookings } = require("../models/bookings");
 
 
 //FUNCTION TO FIND THE USER BY ID
@@ -72,7 +73,31 @@ const deleteUser = async(req, res) => {
     }
 }
 
-module.exports = { updateUser, deleteUser, userById, readUser };
+const addBookingToUserHistory = async(req, res, next) => {
+    try {
+        let history = [];
+        history.push(req.body.booking.adventure);
+
+        await User.findOneAndUpdate({ _id: req.profile._id }, { $push: { history: history } }, { new: true });
+        res.status(200).send({ message: "Updated sucessfully" });
+    } catch (error) {
+        res.status(500).send({ message: "server error" });
+    }
+};
+
+const readBookingHistory = async(req, res) => {
+    try {
+        const bookings = await Bookings.find({ user: req.profile._id });
+        if (!bookings)
+            return res.status(404).send({ message: "No booking history" });
+        res.status(200).send(bookings);
+    } catch (error) {
+        res.status(500).send({ message: "Server error" });
+    }
+};
+
+
+module.exports = { updateUser, deleteUser, userById, readUser, addBookingToUserHistory, readBookingHistory };
 //VALIDATE INFO FROM USER USING JOI VALIDATION
 const validateUpdate = (data) => {
     const schema = joi.object({

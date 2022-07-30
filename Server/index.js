@@ -12,6 +12,8 @@ const travelBlogRoutes = require("./routes/travelBlog");
 const adventureRoutes = require("./routes/adventure");
 const productsRoutes = require("./routes/products");
 const userExperienceRoutes = require("./routes/userExperience");
+const bookingsRoutes = require("./routes/bookings");
+
 const cookieParser = require("cookie-parser");
 const PORT = process.env.PORT || 3000;
 
@@ -42,6 +44,7 @@ app.use("/api/travelBlog", travelBlogRoutes);
 app.use("/api/adventure", adventureRoutes);
 app.use("/api/products", productsRoutes);
 app.use("/api/userExperience", userExperienceRoutes);
+app.use("/api/bookings", bookingsRoutes);
 /*
  * STARTING APP
  */

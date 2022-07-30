@@ -31,9 +31,9 @@ const createAdventure = async(req, res) => {
     try {
 
         //EXTRACT DATA FROM REQUEST
-        const { title, description, category, image } = req.body;
+        const { title, description, category, image, price } = req.body;
         //VALIDATE DATA
-        const { error } = validateAdventure({ title, description, category, image });
+        const { error } = validateAdventure({ title, description, category, image, price });
         if (error)
             return res.status(409).send({ message: error.details[0].message });
 
@@ -43,7 +43,7 @@ const createAdventure = async(req, res) => {
             return res.status(409).send({ message: "Adventure already exists" });
 
         //IF NOT EXISTING THEN POST THE ADVENTURE
-        await new Adventure({ title: title, description: description, category: category, image: image }).save();
+        await new Adventure({ title: title, description: description, category: category, image: image, price: price }).save();
         res.status(200).send({ message: "Adventure added successfully" });
 
     } catch (error) {
@@ -56,14 +56,14 @@ const updateAdventure = async(req, res) => {
     try {
 
         //EXTRACT DATA FROM REQUEST
-        const { title, description, category, image } = req.body;
+        const { title, description, category, image, price } = req.body;
         //VALIDATE DATA
-        const { error } = validateAdventure({ title, description, category, image });
+        const { error } = validateAdventure({ title, description, category, image, price });
         if (error)
             return res.status(409).send({ message: error.details[0].message });
 
         //CHECK IF THE ADVENTURE ALREADY EXISTS BY THIS USER
-        await Adventure.findByIdAndUpdate({ _id: req.params.id }, { title: title, description: description, category: category, image: image });
+        await Adventure.findByIdAndUpdate({ _id: req.params.id }, { title: title, description: description, category: category, image: image, price: price });
         res.status(200).send({ message: "Adventure updated successfully" });
     } catch (error) {
         res.status(500).send({ message: "server error" });
@@ -88,6 +88,7 @@ const validateAdventure = (data) => {
         description: joi.string().required().label("Blog"),
         category: joi.array().required().label("Category"),
         image: joi.string().required().label("Image"),
+        price: joi.number().required().label("Price"),
     });
 
     return schema.validate(data);

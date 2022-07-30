@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema({
     phone: { type: String, maxlength: 10, required: true, },
     age: { type: Number, required: true, },
     role: { type: Number, default: 0 },
+    history: {
+        type: Array,
+        default: []
+    }
 });
 
 //SCHEMA METHOD TO GENERATE JWT TOKEN FOR AUTHORIZATION
