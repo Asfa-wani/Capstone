@@ -1,9 +1,9 @@
 //IMPORTS
 const router = require("express").Router();
 const { requireSignin, isAuth, isAdmin } = require("../middleware/verifyToken")
-const { createProduct, updateProduct, deleteProduct, readAllProdocts, readProduct, productById, readDestProducts, readProductsCategory } = require("../controller/Products");
+const { createProduct, updateProduct, deleteProduct, readAllProdocts, readProduct, productById, readDestProducts, readProductsCategory } = require("../controller/products");
 const { userById } = require("../controller/user");
-const { adventureById } = require("../controller/Adventure");
+const { adventureById } = require("../controller/adventure");
 
 //PRODUCT CRUD ROUTES
 router.post("/create/:userId", requireSignin, isAuth, isAdmin, createProduct);

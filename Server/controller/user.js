@@ -76,13 +76,16 @@ const deleteUser = async(req, res) => {
 const addBookingToUserHistory = async(req, res, next) => {
     try {
         let history = [];
-        history.push(req.body.booking.adventure);
+        history.push(req.adventure);
+        console.log("history", history)
 
         await User.findOneAndUpdate({ _id: req.profile._id }, { $push: { history: history } }, { new: true });
-        res.status(200).send({ message: "Updated sucessfully" });
+        next();
+
     } catch (error) {
-        res.status(500).send({ message: "server error" });
+        res.status(500).send({ message: "server error,could not update history" });
     }
+
 };
 
 const readBookingHistory = async(req, res) => {

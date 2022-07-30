@@ -2,6 +2,7 @@ const router = require("express").Router();
 
 const { requireSignin, isAuth, isAdmin } = require("../middleware/verifyToken");
 const { userById, addBookingToUserHistory } = require("../controller/user");
+const { adventureById } = require("../controller/adventure")
 const {
     createBookings,
     readUserBookings,
@@ -12,24 +13,18 @@ const {
 } = require("../controller/bookings");
 
 router.post(
-    "/create/:userId",
+    "/create/:userId/:adventureId",
     requireSignin,
     isAuth,
     addBookingToUserHistory,
     createBookings
 );
 
-router.get("/find/:userId", requireSignin, isAuth, isAdmin, readUserBookings, );
+router.get("/find/:userId", requireSignin, isAuth, readUserBookings, );
 router.get("/findAll/:userId", requireSignin, isAuth, isAdmin, readAllBookings, );
-router.get(
-    "/status-values/:userId",
-    requireSignin,
-    isAuth,
-    isAdmin,
-    readStatusValues,
-);
+
 router.put(
-    "/:bookingId/status/:userId",
+    "/update/status/:bookingId/:userId",
     requireSignin,
     isAuth,
     isAdmin,
@@ -37,5 +32,6 @@ router.put(
 );
 router.param("userId", userById);
 router.param("bookingId", bookingById);
+router.param("adventureId", adventureById);
 
 module.exports = router;

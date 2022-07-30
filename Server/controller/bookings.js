@@ -19,17 +19,17 @@ const bookingById = (req, res, next, id) => {
 
 const createBookings = async(req, res) => {
     try {
-        console.log(req.body);
-        req.body.booking.user = req.profile;
-        req.body.booking.adventure = req.adventure;
-
+        const price = req.adventure.price;
+        const { participants, from, to } = req.body;
+        const amount = participants * price;
         //CHECK IF THE PRODUCT ALREADY EXISTS BY THIS USER
-        const booking = await Bookings.findOne({ user: req.body.booking.user });
+        const booking = await Bookings.findOne({ user: req.profile._id, adventure: req.adventure._id });
+        console.log("hello3")
         if (booking)
             return res.status(409).send({ message: "booking already exists" });
 
         //IF NOT EXISTING THEN POST THE PRODUCT
-        await new Bookings(req.body).save();
+        await new Bookings({ from: from, to: to, participants: participants, user: req.profile._id, adventure: req.adventure._id, amount: amount, status: "booked" }).save();
         res.status(200).send({ message: "Booking done successfully" });
 
     } catch (error) {
@@ -62,15 +62,13 @@ const readAllBookings = async(req, res) => {
         res.status(500).send({ message: "Internal server error" });
     }
 }
-const readStatusValues = (req, res) => {
-    res.json(Bookings.schema.path('status').enumValues);
-};
+
 
 const updateBookingStatus = async(req, res) => {
     try {
 
         //CHECK IF THE PRODUCT ALREADY EXISTS BY THIS USER
-        await Bookings.findByIdAndUpdate({ _id: req.body.booking._id }, { $set: { status: req.body.status } });
+        await Bookings.findByIdAndUpdate({ _id: req.booking._id }, { $set: { status: req.body.status } });
         res.status(200).send({ message: "Bookings updated successfully" });
     } catch (error) {
         res.status(500).send({ message: "server error" });
@@ -78,4 +76,4 @@ const updateBookingStatus = async(req, res) => {
 };
 
 
-module.exports = { bookingById, readAllBookings, readUserBookings, createBookings, updateBookingStatus, readStatusValues };
+module.exports = { bookingById, readAllBookings, readUserBookings, createBookings, updateBookingStatus };

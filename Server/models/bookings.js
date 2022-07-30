@@ -13,9 +13,9 @@ const bookingsSchema = new mongoose.Schema({
     status: {
         type: String,
         default: "Not Booked",
-        enum: ["Not Booked", "Booked", "Completed", "Cancelled"] // enum means string objects
+        // enum means string objects
     },
-    updated: Date,
+
 
 });
 
