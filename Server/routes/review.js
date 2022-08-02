@@ -1,4 +1,6 @@
-//IMPORTS
+/* 
+ * IMPORTS
+ */
 const router = require("express").Router();
 const { requireSignin, isAuth } = require("../middleware/verifyToken")
 const {
@@ -18,8 +20,8 @@ router.post("/create/:userId/:adventureId", requireSignin, isAuth, createReview)
 router.put("/update/:reviewId/:userId", requireSignin, isAuth, updateReview);
 router.delete("/delete/:reviewId/:userId", requireSignin, isAuth, deleteReview);
 router.get("/find/:userId", requireSignin, isAuth, readUserReviews);
-router.get("/findAdventure/:adventureId/", readDestinationReview);
-router.get("/findAdventByUser/:adventureId/:userId", requireSignin, isAuth, readDestReviewByUser);
+router.get("/findAdventureReview/:adventureId/", readDestinationReview);
+router.get("/findAdventReviewByUser/:adventureId/:userId", requireSignin, isAuth, readDestReviewByUser);
 
 router.param("userId", userById);
 router.param("reviewId", reviewById);

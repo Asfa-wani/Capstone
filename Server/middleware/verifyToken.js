@@ -1,5 +1,8 @@
-//MIDDLEWARE FUNCTIONS
-//IMPORT
+/* 
+ * MIDDLEWARE FUNCTIONS TO AUTHORIZE USER AND ADMIN
+ */
+
+// IMPORT 
 const expressJwt = require("express-jwt");
 
 //VALIDATE TOKEN

@@ -1,6 +1,12 @@
-//IMPORTING
+/* 
+ * IMPORTING
+ */
 const router = require("express").Router();
-const { registerUser, loginUser, logoutUser } = require("../controller/auth");
+const {
+    registerUser,
+    loginUser,
+    logoutUser
+} = require("../controller/auth");
 
 //CREATE ROUTES FOR USER LOGIN AND REGISTER
 router.post("/register", registerUser);

@@ -6,11 +6,10 @@ const { Review } = require("../models/reviews");
 const joi = require("joi");
 
 //FUNCTION TO FIND THE REVIEW BY ID
-
 const reviewById = (req, res, next, id) => {
     Review.findById(id).exec((err, review) => {
         if (err || !review) {
-            return res.status(400).json({
+            return res.status(404).json({
                 error: 'Review not found'
             });
         }
@@ -20,7 +19,6 @@ const reviewById = (req, res, next, id) => {
 };
 
 //FUNCTION TO FIND THE REVIEW
-
 const readReview = async(req, res) => {
     review = req.review;
     res.status(200).send(review);
@@ -77,7 +75,7 @@ const createReview = async(req, res) => {
         //VALIDATE DATA
         const { error } = validateReview({ title, content, rating });
         if (error)
-            return res.status(409).send({ message: error.details[0].message });
+            return res.status(400).send({ message: error.details[0].message });
 
         //CHECK IF THE REVIEW ALREADY EXISTS BY THIS USER
         const review = await Review.findOne({ user: req.profile._id, adventure: req.adventure._id });
@@ -103,7 +101,7 @@ const updateReview = async(req, res) => {
         //VALIDATE DATA
         const { error } = validateReview({ title, content, rating });
         if (error)
-            return res.status(409).send({ message: error.details[0].message });
+            return res.status(400).send({ message: error.details[0].message });
 
         //CHECK IF THE REVIEW ALREADY EXISTS BY THIS USER
         await Review.findByIdAndUpdate({ _id: req.params.id }, { user: req.profile, title: title, content: content, rating: rating });

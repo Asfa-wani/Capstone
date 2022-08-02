@@ -1,4 +1,6 @@
-//IMPORTS
+/*
+ * IMPORTS
+ */
 const router = require("express").Router();
 const { requireSignin, isAuth } = require("../middleware/verifyToken")
 const {
@@ -11,7 +13,7 @@ const {
 const { userById } = require("../controller/user");
 const { userExperienceById } = require("../controller/userExperience");
 
-//REVIEW CRUD ROUTES
+//USER EXPERIENCE CRUD ROUTES
 router.post("/create/:userId", requireSignin, isAuth, createUserExperience);
 router.put("/update/:userExperienceId/:userId", requireSignin, isAuth, updateUserExperience);
 router.delete("/delete/:userExperienceId/:userId", requireSignin, isAuth, deleteUserExperience);

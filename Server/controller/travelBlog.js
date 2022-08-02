@@ -1,17 +1,16 @@
 /*
  * CRUD OPERATIONS FOR USER TRAVEL BLOGS
  */
+
 // IMPORT
 const { TravelBlog } = require("../models/travelBlog");
 const joi = require("joi");
 
-
-//FUNCTION TO FIND THE ADVENTURE BY ID
-
+//FUNCTION TO FIND THE TRAVEL BLOG BY ID
 const travelBlogById = (req, res, next, id) => {
     TravelBlog.findById(id).exec((err, travelBlog) => {
         if (err || !travelBlog) {
-            return res.status(400).json({
+            return res.status(404).json({
                 error: 'Travel Blog not found'
             });
         }
@@ -20,38 +19,39 @@ const travelBlogById = (req, res, next, id) => {
     });
 };
 
-//FUNCTION TO FIND ONE TRAVEL BLOG 
-
+//FUNCTION TO RETRIEVE ONE TRAVEL BLOG 
 const readTravelBlog = async(req, res) => {
     travelBlog = req.travelBlog;
     res.status(200).send(travelBlog);
 }
 
-//FUNCTION TO FIND THE ALL TRAVEL BLOGS
+//FUNCTION TO RETRIEVE ALL TRAVEL BLOGS
 const readAllTravelBlogs = async(req, res) => {
     try {
         const travelBlogs = await TravelBlog.find({});
         if (!travelBlogs)
             return res.status(404).send({ message: "NO travel Blogs exist!" });
+
         res.status(200).send(travelBlogs);
     } catch (error) {
         res.status(500).send({ message: "Server error" });
     }
 }
 
-//FUNCTION TO FIND THE ALL TRAVEL BLOGS BY A USER
+//FUNCTION TO RETRIEVE ALL TRAVEL BLOGS BY A PARTICULAR USER
 const readUserTravelBlog = async(req, res) => {
     try {
         const travelBlogs = await TravelBlog.find({ user: req.profile._id });
         if (!travelBlogs)
             return res.status(404).send({ message: "NO travel Blogs By the user exist!" });
+
         res.status(200).send(travelBlogs);
     } catch (error) {
         res.status(500).send({ message: "Server error" });
     }
 }
 
-//FUNCTION TO CREATE A REVIEW
+//FUNCTION TO CREATE A TRAVEL BLOG
 const createTravelBlog = async(req, res) => {
     try {
 

@@ -15,7 +15,7 @@ const { Bookings } = require("../models/bookings");
 const userById = (req, res, next, id) => {
     User.findById(id).exec((err, user) => {
         if (err || !user) {
-            return res.status(400).json({
+            return res.status(404).json({
                 error: 'User not found'
             });
         }
@@ -24,7 +24,7 @@ const userById = (req, res, next, id) => {
     });
 };
 
-//FUNCTION TO FIND THE USER
+//FUNCTION TO FIND ONE USER
 
 const readUser = (req, res) => {
     user = req.profile;
@@ -40,8 +40,8 @@ const updateUser = async(req, res) => {
         //VALIDATE DATA
         const { error } = validateUpdate({ name, password, address, phone, age });
         if (error)
-            return res.status(401).send({ message: error.details[0].message });
-        //ENCRYPT THE PASSWORD
+            return res.status(400).send({ message: error.details[0].message });
+        //ENCRYPT THE PASSWORD USING BCRYPT
         const salt = await bcrypt.genSalt(Number(process.env.SALT));
         const hashPassword = await bcrypt.hash(password, salt);
 
@@ -56,7 +56,7 @@ const updateUser = async(req, res) => {
         console.log("check")
             //console.log(updatedUser)
 
-        res.status(200).send({ message: "user updated successfully" });
+        res.status(200).send({ message: "User updated successfully" });
 
     } catch (error) {
         res.status(500).send({ message: "Internal server error" });
@@ -66,28 +66,31 @@ const updateUser = async(req, res) => {
 //FUNCTION TO DELETE USER
 const deleteUser = async(req, res) => {
     try {
+        //SEARCH FOR THE USER IN DB AND DELETE
         await User.findByIdAndDelete({ _id: req.profile.id });
         res.status(200).send({ message: "Deleted successfully" });
     } catch (error) {
-        res.status(500).send({ message: "internal server error" })
+        res.status(500).send({ message: "Internal server error" })
     }
 }
 
+//FUNCTION TO ADD ADVENTURE BOOKING TO USER'S HISTORY 
 const addBookingToUserHistory = async(req, res, next) => {
     try {
         let history = [];
         history.push(req.adventure);
-        console.log("history", history)
-
+        //console.log("history", history)
         await User.findOneAndUpdate({ _id: req.profile._id }, { $push: { history: history } }, { new: true });
         next();
 
     } catch (error) {
-        res.status(500).send({ message: "server error,could not update history" });
+        res.status(500).send({ message: "Server error, could not update history!" });
     }
 
 };
 
+
+//FUNCTION TO RETRIEVE BOOKINGS BY THE USER
 const readBookingHistory = async(req, res) => {
     try {
         const bookings = await Bookings.find({ user: req.profile._id });
@@ -100,7 +103,15 @@ const readBookingHistory = async(req, res) => {
 };
 
 
-module.exports = { updateUser, deleteUser, userById, readUser, addBookingToUserHistory, readBookingHistory };
+module.exports = {
+    updateUser,
+    deleteUser,
+    userById,
+    readUser,
+    addBookingToUserHistory,
+    readBookingHistory
+};
+
 //VALIDATE INFO FROM USER USING JOI VALIDATION
 const validateUpdate = (data) => {
     const schema = joi.object({

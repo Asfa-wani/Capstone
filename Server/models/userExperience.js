@@ -1,13 +1,16 @@
+/* 
+ * IMPORTS
+ */
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
-//CREATE REVIEW SCHEMA
 
+//CREATE USER EXPERIENCE  SCHEMA
 const userExperienceSchema = new mongoose.Schema({
     user: { type: ObjectId, ref: "User" },
     experience: { type: String, required: true },
     rating: { type: Number, required: true }
-});
+}, { timestamps: true });
 
-//REVIEW MODEL
+//USER EXPERIENCE MODEL
 const UserExperience = mongoose.model("userExperience", userExperienceSchema);
 module.exports = { UserExperience };
