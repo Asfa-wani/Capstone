@@ -3,7 +3,10 @@
  */
 // IMPORT
 const { Adventure } = require("../models/adventure");
-const joi = require("joi");
+//const joi = require("joi");
+const fs = require("fs");
+const _ = require("lodash");
+const formidable = require("formidable")
 
 //FUNCTION TO FIND THE ADVENTURE BY ID
 
@@ -27,48 +30,82 @@ const readAdventure = async(req, res) => {
 }
 
 //FUNCTION TO CREATE A ADVENTURE
-const createAdventure = async(req, res) => {
+const createAdventure = (req, res) => {
     try {
+        //USING FORMIDABLE FORM TO EXTRACT INCOMING DATA
+        let form = new formidable.IncomingForm();
+        form.keepExtensions = true;
+        form.parse(req, async(err, fields, files) => {
+            if (err)
+                return res.status(400).send({ error: "Image could not be uploaded", });
 
-        //EXTRACT DATA FROM REQUEST
-        const { title, description, category, image, price } = req.body;
-        //VALIDATE DATA
-        const { error } = validateAdventure({ title, description, category, image, price });
-        if (error)
-            return res.status(409).send({ message: error.details[0].message });
+            const { title, description, category, price } = fields;
+            if (!title || !description || !category || !price)
+                return res.status(400).json({ error: "All fields are required", });
 
-        //CHECK IF THE ADVENTURE ALREADY EXISTS BY THIS USER
-        const adventure = await Adventure.findOne({ title: title });
-        if (adventure)
-            return res.status(409).send({ message: "Adventure already exists" });
+            // CHECK IF THE ADVENTURE ALREADY EXISTS
+            const existingAdventure = await Adventure.findOne({ title: title });
+            if (existingAdventure)
+                return res.status(409).send({ message: "Adventure with this title  already exists" });
 
-        //IF NOT EXISTING THEN POST THE ADVENTURE
-        await new Adventure({ title: title, description: description, category: category, image: image, price: price }).save();
-        res.status(200).send({ message: "Adventure added successfully" });
-
+            //CREATING TRAVEL ADVENTURE WITHOUT IMAGE
+            let adventure = new Adventure({ title: title, description: description, category: category, price: price });
+            // 1kb = 1000
+            // 1mb = 1000000
+            if (files.photo) {
+                if (files.photo.size > 1000000)
+                    return res.status(400).json({ error: "Image should be less than 1mb in size", });
+                adventure.photo.data = fs.readFileSync(files.photo.filepath);
+                adventure.photo.contentType = files.photo.type;
+            };
+            //SAVE THE ADVENTURE WITH IMAGE IN DB
+            const result = await adventure.save()
+            res.status(200).send(result);
+        });
     } catch (error) {
-        res.status(500).send({ message: "server error" });
+        res.status(500).send({ message: "server error" })
     }
 };
 
 //FUNCTION TO UPDATE A ADVENTURE
-const updateAdventure = async(req, res) => {
+const updateAdventure = (req, res) => {
     try {
+        //USING FORMIDABLE FORM TO EXTRACT INCOMING DATA
+        let form = new formidable.IncomingForm();
+        form.keepExtensions = true;
+        form.parse(req, async(err, fields, files) => {
+            if (err)
+                return res.status(400).send({ error: "Image could not be uploaded", });
 
-        //EXTRACT DATA FROM REQUEST
-        const { title, description, category, image, price } = req.body;
-        //VALIDATE DATA
-        const { error } = validateAdventure({ title, description, category, image, price });
-        if (error)
-            return res.status(409).send({ message: error.details[0].message });
+            // CHECK IF THE ADVENTURE ALREADY EXISTS
+            const existingAdventure = await Adventure.findOne({ title: fields.title });
+            if (existingAdventure)
+                return res.status(409).send({ message: "Adventure with this title  already exists" });
+            //RETRIEVE ADVENTURE BY ID
+            let adventure = req.adventure;
+            //PUT NEW FORM FIELDS IN THE ADVENTURE THAT IS TO BE UPDATED
+            adventure = _.extend(adventure, fields);
 
-        //CHECK IF THE ADVENTURE ALREADY EXISTS BY THIS USER
-        await Adventure.findByIdAndUpdate({ _id: req.params.id }, { title: title, description: description, category: category, image: image, price: price });
-        res.status(200).send({ message: "Adventure updated successfully" });
+            // 1kb = 1000
+            // 1mb = 1000000
+            //PUT THE IMAGE IN PHOTO FIELD OF ADVENTURE
+            if (files.photo) {
+                if (files.photo.size > 1000000)
+                    return res.status(400).json({ error: "Image should be less than 1mb in size", });
+
+                adventure.photo.data = fs.readFileSync(files.photo.filepath);
+                adventure.photo.contentType = files.photo.type;
+            };
+            //SEND THE UPDATED ADVENTURE AS RESPONSE
+            const result = await adventure.save();
+            res.status(200).send(result);
+        });
     } catch (error) {
         res.status(500).send({ message: "server error" });
     }
 };
+
+
 
 //FUNCTION TO DELETE ADVENTURE
 const deleteAdventure = async(req, res) => {
@@ -81,7 +118,7 @@ const deleteAdventure = async(req, res) => {
 }
 module.exports = { createAdventure, updateAdventure, deleteAdventure, readAdventure, adventureById };
 
-// JOI VALIDATION FUNCTION
+/* // JOI VALIDATION FUNCTION
 const validateAdventure = (data) => {
     const schema = joi.object({
         title: joi.string().required().label("Title"),
@@ -92,4 +129,4 @@ const validateAdventure = (data) => {
     });
 
     return schema.validate(data);
-}
+} */

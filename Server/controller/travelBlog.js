@@ -4,11 +4,11 @@
 
 // IMPORT
 const { TravelBlog } = require("../models/travelBlog");
-const joi = require("joi");
+//const joi = require("joi");
 const fs = require("fs");
 const _ = require("lodash");
-const formidable = require("formidable")
-    //FUNCTION TO FIND THE TRAVEL BLOG BY ID
+const formidable = require("formidable");
+//FUNCTION TO FIND THE TRAVEL BLOG BY ID
 const travelBlogById = (req, res, next, id) => {
     TravelBlog.findById(id).exec((err, travelBlog) => {
         if (err || !travelBlog) {
@@ -101,6 +101,13 @@ const updateTravelBlog = (req, res) => {
         form.parse(req, async(err, fields, files) => {
             if (err)
                 return res.status(400).send({ error: "Image could not be uploaded", });
+
+
+            // CHECK IF THE BLOG ALREADY EXISTS
+            const existingBlogs = await TravelBlog.findOne({ title: fields.title });
+            if (existingBlogs)
+                return res.status(409).send({ message: "Blog with this title by the user already exists" });
+
             //RETRIEVE TRAVELBLOG BY ID
             let travelBlog = req.travelBlog;
             //PUT NEW FORM FIELDS IN THE TRAVEL BLOG THAT IS TO BE UPDATED
