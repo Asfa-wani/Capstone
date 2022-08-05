@@ -1,4 +1,6 @@
-//IMPORTS
+/* 
+ * IMPORTS
+ */
 const router = require("express").Router();
 const { requireSignin, isAuth } = require("../middleware/verifyToken")
 const {
@@ -14,7 +16,7 @@ const { userById } = require("../controller/user")
 
 //TRAVEL BLOGS CRUD ROUTES
 router.post("/create/:userId", requireSignin, isAuth, createTravelBlog);
-router.put("/update/:id/:userId", requireSignin, isAuth, updateTravelBlog);
+router.put("/update/:travelBlogId/:userId", requireSignin, isAuth, updateTravelBlog);
 router.delete("/delete/:id/:userId", requireSignin, isAuth, deleteTravelBlog);
 router.get("/findTravelBlogs/:travelBlogId", readTravelBlog);
 router.get("/findUserBlogs/:userId", requireSignin, isAuth, readUserTravelBlog);

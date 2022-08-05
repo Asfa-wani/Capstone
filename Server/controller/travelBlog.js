@@ -5,8 +5,10 @@
 // IMPORT
 const { TravelBlog } = require("../models/travelBlog");
 const joi = require("joi");
-
-//FUNCTION TO FIND THE TRAVEL BLOG BY ID
+const fs = require("fs");
+const _ = require("lodash");
+const formidable = require("formidable")
+    //FUNCTION TO FIND THE TRAVEL BLOG BY ID
 const travelBlogById = (req, res, next, id) => {
     TravelBlog.findById(id).exec((err, travelBlog) => {
         if (err || !travelBlog) {
@@ -21,8 +23,9 @@ const travelBlogById = (req, res, next, id) => {
 
 //FUNCTION TO RETRIEVE ONE TRAVEL BLOG 
 const readTravelBlog = async(req, res) => {
-    travelBlog = req.travelBlog;
-    res.status(200).send(travelBlog);
+    //travelBlog = req.travelBlog;
+    req.travelBlog.photo = undefined;
+    res.status(200).send(req.travelBlog);
 }
 
 //FUNCTION TO RETRIEVE ALL TRAVEL BLOGS
@@ -49,53 +52,82 @@ const readUserTravelBlog = async(req, res) => {
     } catch (error) {
         res.status(500).send({ message: "Server error" });
     }
-}
+};
 
 //FUNCTION TO CREATE A TRAVEL BLOG
-const createTravelBlog = async(req, res) => {
+const createTravelBlog = (req, res) => {
     try {
+        //USING FORMIDABLE FORM TO EXTRACT INCOMING DATA
+        let form = new formidable.IncomingForm();
+        form.keepExtensions = true;
+        form.parse(req, async(err, fields, files) => {
+            if (err)
+                return res.status(400).send({ error: "Image could not be uploaded", });
 
-        //EXTRACT DATA FROM REQUEST
-        const { title, blog, image } = req.body;
-        //VALIDATE DATA
-        const { error } = validateBlog({ title, blog, image });
-        if (error)
-            return res.status(409).send({ message: error.details[0].message });
+            const { title, blog } = fields;
+            if (!title || !blog)
+                return res.status(400).json({ error: "All fields are required", });
 
-        //CHECK IF THE REVIEW ALREADY EXISTS BY THIS USER
-        const travelBlog = await TravelBlog.findOne({ title: title, user: req.profile._id });
-        if (travelBlog)
-            return res.status(409).send({ message: "Blog with this title by the user already exists" });
+            // CHECK IF THE BLOG ALREADY EXISTS
+            const existingBlogs = await TravelBlog.findOne({ title: title });
+            if (existingBlogs)
+                return res.status(409).send({ message: "Blog with this title by the user already exists" });
 
-        //IF NOT EXISTING THEN POST THE REVIEW
-        await new TravelBlog({ user: req.profile, title: title, blog: blog, image: image }).save();
-        res.status(200).send({ message: "Blog posted successfully" });
+            //CREATING TRAVEL BLOG WITHOUT IMAGE
+            let travelBlog = new TravelBlog({ title: title, blog: blog, user: req.profile._id });
+            // 1kb = 1000
+            // 1mb = 1000000
+            if (files.photo) {
+                if (files.photo.size > 1000000)
+                    return res.status(400).json({ error: "Image should be less than 1mb in size", });
+                travelBlog.photo.data = fs.readFileSync(files.photo.filepath);
+                travelBlog.photo.contentType = files.photo.type;
+            };
+            //SAVE THE TRAVELBLOG WITH IMAGE IN DB
+            const result = await travelBlog.save();
+            res.status(200).send(result);
+        });
+    } catch (error) {
+        res.status(500).send({ message: "server error" })
+    }
+};
 
+//FUNCTION TO UPDATE THE TRAVEL BLOG
+const updateTravelBlog = (req, res) => {
+    try {
+        //USING FORMIDABLE FORM TO EXTRACT INCOMING DATA
+        let form = new formidable.IncomingForm();
+        form.keepExtensions = true;
+        form.parse(req, async(err, fields, files) => {
+            if (err)
+                return res.status(400).send({ error: "Image could not be uploaded", });
+            //RETRIEVE TRAVELBLOG BY ID
+            let travelBlog = req.travelBlog;
+            //PUT NEW FORM FIELDS IN THE TRAVEL BLOG THAT IS TO BE UPDATED
+            travelBlog = _.extend(travelBlog, fields);
+
+            // 1kb = 1000
+            // 1mb = 1000000
+            //PUT THE IMAGE IN PHOTO FIELD OF TRAVEL BLOG
+            if (files.photo) {
+                if (files.photo.size > 1000000)
+                    return res.status(400).json({ error: "Image should be less than 1mb in size", });
+
+                travelBlog.photo.data = fs.readFileSync(files.photo.filepath);
+                travelBlog.photo.contentType = files.photo.type;
+            };
+            //SEND THE UPDATED TRAVEL BLOG AS RESPONSE
+            const result = await travelBlog.save();
+            res.status(200).send(result);
+        });
     } catch (error) {
         res.status(500).send({ message: "server error" });
     }
 };
 
-//FUNCTION TO UPDATE A REVIEW
-const updateTravelBlog = async(req, res) => {
-    try {
 
-        //EXTRACT DATA FROM REQUEST
-        const { title, blog, image } = req.body;
-        //VALIDATE DATA
-        const { error } = validateBlog({ title, blog, image });
-        if (error)
-            return res.status(409).send({ message: error.details[0].message });
 
-        //CHECK IF THE REVIEW ALREADY EXISTS BY THIS USER
-        await TravelBlog.findByIdAndUpdate({ _id: req.params.id }, { user: req.profile, title: title, blog: blog, image: image });
-        res.status(200).send({ message: "Travel blogupdated successfully" });
-    } catch (error) {
-        res.status(500).send({ message: "server error" });
-    }
-};
-
-//FUNCTION TO DELETE REVIEW
+//FUNCTION TO DELETE TRAVEL BLOG
 const deleteTravelBlog = async(req, res) => {
     try {
         await TravelBlog.findByIdAndDelete({ _id: req.params.id });
@@ -113,14 +145,3 @@ module.exports = {
     readAllTravelBlogs,
     readUserTravelBlog
 };
-
-// JOI VALIDATION FUNCTION
-const validateBlog = (data) => {
-    const schema = joi.object({
-        title: joi.string().required().label("Title"),
-        blog: joi.string().required().label("Blog"),
-        image: joi.string().required().label("Image"),
-    });
-
-    return schema.validate(data);
-}

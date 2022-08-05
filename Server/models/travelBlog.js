@@ -9,7 +9,10 @@ const travelBlogSchema = new mongoose.Schema({
     user: { type: ObjectId, ref: 'User' },
     title: { type: String, required: true, unique: true },
     blog: { type: String, required: true },
-    image: { type: String },
+    photo: {
+        data: Buffer,
+        contentType: String
+    },
 }, { timestamps: true });
 
 //EXPORTING AND CREATING TRAVEL BLOG MODEL 
