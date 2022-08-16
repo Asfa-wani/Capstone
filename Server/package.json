@@ -1,0 +1,36 @@
+{
+    "name": "capstone",
+    "version": "1.0.0",
+    "description": "Travel website",
+    "main": "app.js",
+    "scripts": {
+        "start": "nodemon app.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Asfa-wani/Capstone.git"
+    },
+    "author": "Asfa wani",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Asfa-wani/Capstone/issues"
+    },
+    "homepage": "https://github.com/Asfa-wani/Capstone#readme",
+    "dependencies": {
+        "bcrypt": "^5.0.1",
+        "cookie-parser": "^1.4.6",
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.1",
+        "express": "^4.18.1",
+        "express-jwt": "^5.3.1",
+        "formidable": "^2.0.1",
+        "fs": "^0.0.1-security",
+        "joi": "^17.6.0",
+        "joi-password-complexity": "^5.1.0",
+        "jsonwebtoken": "^8.5.1",
+        "lodash": "^4.17.21",
+        "mongoose": "^6.4.6",
+        "nodemon": "^2.0.19"
+    }
+}
