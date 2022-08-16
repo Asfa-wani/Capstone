@@ -25,14 +25,72 @@ const adventureById = (req, res, next, id) => {
 //FUNCTION TO FIND THE ADVENTURE
 
 const readAdventure = async(req, res) => {
-    adventure = req.adventure;
+    const adventure = req.adventure;
     res.status(200).send(adventure);
-}
+};
 
-//FUNCTION TO CREATE A ADVENTURE
+//FUNCTION TO FIND ALL THE ADVENTURES
+const readAllAdventures = async(req, res) => {
+    try {
+        const adventures = await Adventures.find({});
+        if (!adventures)
+            return res.status(404).send({ message: "No adventures found" });
+        res.status(200).send(adventures);
+    } catch (error) {
+        res.status(500).send({ message: "Server error" });
+    }
+};
+
+//FUNCTION TO READ ADVENTURES BY PARTICULAR CATEGORY
+const readAdventuresByCategory = async(req, res) => {
+    try {
+        const destination = req.adventure;
+        Category = destination.category[0];
+        const adventuresByCategory = await Adventure.find({ category: category });
+        if (!adventuresByCategory[0])
+            return res.status(404).send({ message: "No products for this destination found" });
+        res.status(200).send(adventuresByCategory);
+
+    } catch (error) {
+        res.status(500).send({ message: "Server error" });
+    }
+};
+
+//FUNCTION TO ADD ADVENTURE BOOKING TO USER'S HISTORY 
+const addReviewToAdventure = async(req, res, next) => {
+    try {
+        let reviews = [];
+        reviews.push(req.body);
+
+        await Adventure.findOneAndUpdate({ _id: req.adventure._id }, { $push: { reviews: reviews } }, { new: true });
+        next();
+
+    } catch (error) {
+        res.status(500).send({ message: "Server error, could not update history!" });
+    }
+
+};
+
+//FUNCTION TO READ POPULAR ADVENTURE
+/* const readPopularAdventure = async(req, res) => {
+    try {
+        const sort = { reviews: { rating: -1 } };
+        console.log("hello")
+        const adventureReviews = await Adventure.find({}).sort("-rating");
+        console.log("hello")
+        console.log(adventureReviews)
+        if (!bookings)
+            return res.status(404).send({ message: "No booking history" });
+        res.status(200).send(bookings);
+    } catch (error) {
+        res.status(500).send({ message: "Server error" });
+    }
+};
+ */
+//FUNCTION TO CREATE AN ADVENTURE
 const createAdventure = (req, res) => {
     try {
-        //USING FORMIDABLE FORM TO EXTRACT INCOMING DATA
+        //USING FORMIDABLE FORM TO GET USER DATA
         let form = new formidable.IncomingForm();
         form.keepExtensions = true;
         form.parse(req, async(err, fields, files) => {
@@ -116,17 +174,14 @@ const deleteAdventure = async(req, res) => {
         res.status(500).send({ message: "Server error" });
     }
 }
-module.exports = { createAdventure, updateAdventure, deleteAdventure, readAdventure, adventureById };
-
-/* // JOI VALIDATION FUNCTION
-const validateAdventure = (data) => {
-    const schema = joi.object({
-        title: joi.string().required().label("Title"),
-        description: joi.string().required().label("Blog"),
-        category: joi.array().required().label("Category"),
-        image: joi.string().required().label("Image"),
-        price: joi.number().required().label("Price"),
-    });
-
-    return schema.validate(data);
-} */
+module.exports = {
+    createAdventure,
+    updateAdventure,
+    deleteAdventure,
+    readAdventure,
+    adventureById,
+    readAdventuresByCategory,
+    readAllAdventures,
+    addReviewToAdventure,
+    // readPopularAdventure
+};

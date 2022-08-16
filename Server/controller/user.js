@@ -4,7 +4,7 @@
 
 //IMPORT STATEMENTS
 const joi = require("joi");
-const { User } = require("../models/user");
+const User = require("../models/user");
 const passwordComplexity = require("joi-password-complexity");
 const bcrypt = require("bcrypt");
 const { Bookings } = require("../models/bookings");

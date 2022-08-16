@@ -16,5 +16,5 @@ const travelBlogSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 //EXPORTING AND CREATING TRAVEL BLOG MODEL 
-const TravelBlog = mongoose.model("travelBlog", travelBlogSchema);
+const TravelBlog = mongoose.model("TravelBlog", travelBlogSchema);
 module.exports = { TravelBlog };

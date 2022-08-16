@@ -12,5 +12,5 @@ const userExperienceSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 //USER EXPERIENCE MODEL
-const UserExperience = mongoose.model("userExperience", userExperienceSchema);
+const UserExperience = mongoose.model("UserExperience", userExperienceSchema);
 module.exports = { UserExperience };

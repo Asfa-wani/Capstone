@@ -15,5 +15,5 @@ const adventureSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 //CREATING THE MODEL
-const Adventure = mongoose.model("adventure", adventureSchema);
+const Adventure = mongoose.model("Adventure", adventureSchema);
 module.exports = { Adventure };

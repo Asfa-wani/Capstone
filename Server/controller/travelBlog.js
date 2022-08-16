@@ -10,7 +10,7 @@ const _ = require("lodash");
 const formidable = require("formidable");
 //FUNCTION TO FIND THE TRAVEL BLOG BY ID
 const travelBlogById = (req, res, next, id) => {
-    TravelBlog.findById(id).exec((err, travelBlog) => {
+    TravelBlog.findById(id).populate('user').exec((err, travelBlog) => {
         if (err || !travelBlog) {
             return res.status(404).json({
                 error: 'Travel Blog not found'
@@ -31,7 +31,7 @@ const readTravelBlog = async(req, res) => {
 //FUNCTION TO RETRIEVE ALL TRAVEL BLOGS
 const readAllTravelBlogs = async(req, res) => {
     try {
-        const travelBlogs = await TravelBlog.find({});
+        const travelBlogs = await TravelBlog.find({}).populate('user');
         if (!travelBlogs)
             return res.status(404).send({ message: "NO travel Blogs exist!" });
 

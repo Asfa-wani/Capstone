@@ -3,6 +3,7 @@
  */
 // IMPORT
 const { Review } = require("../models/reviews");
+
 const joi = require("joi");
 
 //FUNCTION TO FIND THE REVIEW BY ID
@@ -64,7 +65,31 @@ const readDestReviewByUser = async(req, res) => {
     } catch (error) {
         res.status(500).send({ message: "Internal server error" });
     }
-}
+};
+
+
+const readPopularDestinations = async(req, res) => {
+    try {
+        const avgRating = await Review.aggregate([{
+            $group: {
+                _id: "$adventure",
+                averageRating: { $avg: "$rating" },
+            },
+        }]);
+        const sortedRating = avgRating.sort((a, b) => (a.averageRating > b.averageRating) ? -1 : 1);
+        var popDestinations = [];
+        for (i = 0; i < sortedRating.length; i++) {
+            console.log(sortedRating[i]._id)
+            var popular = await Review.find({ adventure: sortedRating[i]._id, rating: sortedRating[i].averageRating }).populate("adventure").select("-_id -user -title -content -__v")
+            popDestinations.push(popular);
+
+
+        };
+        res.status(200).send(popDestinations)
+    } catch (error) {
+        res.status(500).send({ message: "Server error" });
+    }
+};
 
 //FUNCTION TO CREATE A REVIEW
 const createReview = async(req, res) => {
@@ -128,7 +153,8 @@ module.exports = {
     readDestinationReview,
     reviewById,
     readReview,
-    readDestReviewByUser
+    readDestReviewByUser,
+    readPopularDestinations
 };
 
 // JOI VALIDATION FUNCTION

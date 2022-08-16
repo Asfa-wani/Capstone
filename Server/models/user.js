@@ -22,7 +22,15 @@ const userSchema = new mongoose.Schema({
         type: Array,
         default: []
     }
-}, { timestamps: true });
+}, {
+    timestamps: true,
+    toJSON: {
+        virtuals: true,
+    },
+    toObject: {
+        virtuals: true,
+    },
+});
 
 /* 
  * SCHEMA METHOD TO GENERATE JWT TOKEN FOR AUTHORIZATION 
@@ -35,7 +43,7 @@ userSchema.methods.genAuthToken = function() {
 /* 
  * CREATING THE USER MODEL 
  */
-const User = mongoose.model("user", userSchema);
+const User = mongoose.model("User", userSchema);
 
 /* 
  * VALIDATING USER INFO WITH JOI VALIDATION 

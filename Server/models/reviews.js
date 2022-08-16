@@ -2,7 +2,7 @@
  * IMPORTS
  */
 
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 const { ObjectId } = mongoose.Schema;
 
 //CREATE REVIEW SCHEMA
@@ -15,5 +15,5 @@ const reviewSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 //REVIEW MODEL
-const Review = mongoose.model("review", reviewSchema);
+const Review = mongoose.model("Review", reviewSchema);
 module.exports = { Review };
