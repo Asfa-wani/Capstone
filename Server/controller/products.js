@@ -3,9 +3,11 @@
  */
 // IMPORT
 
-const fs = require("fs");
 const { Product } = require("../models/product");
 const joi = require("joi");
+const fs = require("fs");
+const _ = require("lodash");
+const formidable = require("formidable");
 
 //FUNCTION TO FIND THE PRODUCT BY ID
 
@@ -73,7 +75,7 @@ const readProductsCategory = async(req, res) => {
 
 
 //FUNCTION TO CREATE A PRODUCT
-const createProduct = async(req, res) => {
+/* const createProduct = async(req, res) => {
     try {
 
         //EXTRACT DATA FROM REQUEST
@@ -95,10 +97,88 @@ const createProduct = async(req, res) => {
     } catch (error) {
         res.status(500).send({ message: "server error" });
     }
+}; */
+//FUNCTION TO CREATE A TRAVEL BLOG
+const createProduct = (req, res) => {
+    try {
+        //USING FORMIDABLE FORM TO EXTRACT INCOMING DATA
+        let form = new formidable.IncomingForm();
+        form.keepExtensions = true;
+        form.parse(req, async(err, fields, files) => {
+            if (err)
+                return res.status(400).send({ error: "Image could not be uploaded", });
+
+            const { title, description, category, url } = fields;
+            if (!title || !description || !category || !url)
+                return res.status(400).json({ error: "All fields are required", });
+
+            // CHECK IF THE BLOG ALREADY EXISTS
+            const existingProduct = await Product.findOne({ title: title, category: category });
+            if (existingProduct)
+                return res.status(409).send({ message: "Product  with this title  already exists" });
+
+            //CREATING TRAVEL BLOG WITHOUT IMAGE
+            let product = new Product({ title: title, description: description, category: category, url: url });
+            // 1kb = 1000
+            // 1mb = 1000000
+            if (files.photo) {
+                if (files.photo.size > 1000000)
+                    return res.status(400).json({ error: "Image should be less than 1mb in size", });
+                product.photo.data = fs.readFileSync(files.photo.filepath);
+                product.photo.contentType = files.photo.type;
+            };
+            //SAVE THE TRAVELBLOG WITH IMAGE IN DB
+            const result = await product.save();
+            res.status(200).send(result);
+        });
+    } catch (error) {
+        res.status(500).send({ message: "server error" })
+    }
 };
 
+//FUNCTION TO UPDATE THE TRAVEL BLOG
+const updateProduct = (req, res) => {
+    try {
+        //USING FORMIDABLE FORM TO EXTRACT INCOMING DATA
+        let form = new formidable.IncomingForm();
+        form.keepExtensions = true;
+        form.parse(req, async(err, fields, files) => {
+            if (err)
+                return res.status(400).send({ error: "Image could not be uploaded", });
+
+
+            // CHECK IF THE BLOG ALREADY EXISTS
+            const existingProduct = await TravelBlog.findOne({ title: fields.title });
+            if (existingProduct)
+                return res.status(409).send({ message: "Blog with this title by the user already exists" });
+
+            //RETRIEVE TRAVELBLOG BY ID
+            let product = req.product;
+            //PUT NEW FORM FIELDS IN THE TRAVEL BLOG THAT IS TO BE UPDATED
+            product = _.extend(product, fields);
+
+            // 1kb = 1000
+            // 1mb = 1000000
+            //PUT THE IMAGE IN PHOTO FIELD OF TRAVEL BLOG
+            if (files.photo) {
+                if (files.photo.size > 1000000)
+                    return res.status(400).json({ error: "Image should be less than 1mb in size", });
+
+                product.photo.data = fs.readFileSync(files.photo.filepath);
+                product.photo.contentType = files.photo.type;
+            };
+            //SEND THE UPDATED TRAVEL BLOG AS RESPONSE
+            const result = await product.save();
+            res.status(200).send(result);
+        });
+    } catch (error) {
+        res.status(500).send({ message: "server error" });
+    }
+};
+
+
 //FUNCTION TO UPDATE A PRODUCT
-const updateProduct = async(req, res) => {
+/* const updateProduct = async(req, res) => {
     try {
 
         //EXTRACT DATA FROM REQUEST
@@ -115,7 +195,7 @@ const updateProduct = async(req, res) => {
         res.status(500).send({ message: "server error" });
     }
 };
-
+ */
 //FUNCTION TO DELETE PRODUCT
 const deleteProduct = async(req, res) => {
     try {
