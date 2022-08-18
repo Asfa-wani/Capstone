@@ -4,15 +4,15 @@
 const express = require("express");
 require("dotenv").config();
 const cors = require("cors");
-const connection = require("./db/connection");
-const userRoutes = require("./routes/user");
-const authRoutes = require("./routes/auth");
-const reviewRoutes = require("./routes/review");
-const travelBlogRoutes = require("./routes/travelBlog");
-const adventureRoutes = require("./routes/adventure");
-const productsRoutes = require("./routes/products");
-const userExperienceRoutes = require("./routes/userExperience");
-const bookingsRoutes = require("./routes/bookings");
+const connection = require("./Server/db/connection");
+const userRoutes = require("./Server/routes/user");
+const authRoutes = require("./Server/routes/auth");
+const reviewRoutes = require("./Server/routes/review");
+const travelBlogRoutes = require("./Server/routes/travelBlog");
+const adventureRoutes = require("./Server/routes/adventure");
+const productsRoutes = require("./Server/routes/products");
+const userExperienceRoutes = require("./Server/routes/userExperience");
+const bookingsRoutes = require("./Server/routes/bookings");
 
 const cookieParser = require("cookie-parser");
 const PORT = process.env.PORT || 3000;
