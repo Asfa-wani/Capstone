@@ -81,7 +81,17 @@ const readPendingAdventures = async(req, res) => {
     } catch (error) {
         res.status(500).send({ message: "Server error" });
     }
-}
+};
+const readRecentAdventures = async(req, res) => {
+    try {
+        const pendingAdventures = await Bookings.find({ user: req.profile._id, status: "pending" });
+        if (!pendingAdventures)
+            return res.status(404).send({ message: "No completed adventures" });
+        res.status(200).send(pendingAdventures);
+    } catch (error) {
+        res.status(500).send({ message: "Server error" });
+    }
+};
 
 
 const updateBookingStatus = async(req, res) => {
@@ -96,4 +106,4 @@ const updateBookingStatus = async(req, res) => {
 };
 
 
-module.exports = { bookingById, readAllBookings, readCompletedAdventures, readPendingAdventures, readUserBookings, createBookings, updateBookingStatus };
+module.exports = { bookingById, readAllBookings, readCompletedAdventures, readPendingAdventures, readRecentAdventures, readUserBookings, createBookings, updateBookingStatus };

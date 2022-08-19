@@ -8,6 +8,7 @@ const {
     readUserBookings,
     readAllBookings,
     readStatusValues,
+    readRecentAdventures,
     readCompletedAdventures,
     readPendingAdventures,
     bookingById,
@@ -22,8 +23,9 @@ router.post(
     createBookings
 );
 
-router.get("/findCompletedAdvents/:userId", requireSignin, isAuth, readCompletedAdventures, );
-router.get("/findPendingAdvents/:userId", requireSignin, isAuth, readPendingAdventures, );
+router.get("/findRecentAdvents/:userId", requireSignin, isAuth, readRecentAdventures, );
+router.get("/findPendingAdvents", requireSignin, isAuth, readPendingAdventures, );
+router.get("/findCompletedAdvents", requireSignin, isAuth, readCompletedAdventures, );
 router.get("/find/:userId", requireSignin, isAuth, readUserBookings, );
 router.get("/findAll/:userId", requireSignin, isAuth, isAdmin, readAllBookings, );
 
