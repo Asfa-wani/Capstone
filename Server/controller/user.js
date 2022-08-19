@@ -107,7 +107,8 @@ const addExperienceToUserFeedback = async(req, res, next) => {
     try {
         let feedback = [];
         feedback.push(req.userExperience);
-        //console.log("history", history)
+
+        console.log("feedback", feedback)
         await User.findOneAndUpdate({ _id: req.profile._id }, { $push: { feedback: feedback } }, { new: true });
         next();
 
