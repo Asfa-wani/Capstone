@@ -84,7 +84,7 @@ const readPendingAdventures = async(req, res) => {
 };
 const readRecentAdventures = async(req, res) => {
     try {
-        const pendingAdventures = await Bookings.find({ user: req.profile._id, status: "pending" });
+        const pendingAdventures = await Bookings.find({ user: req.profile._id, status: "completed" });
         if (!pendingAdventures)
             return res.status(404).send({ message: "No completed adventures" });
         res.status(200).send(pendingAdventures);
