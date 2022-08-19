@@ -32,7 +32,7 @@ const readUser = (req, res) => {
 }
 
 //FUNCTION TO FIND ONE USER
-const readAllUsers = (req, res) => {
+const readAllUsers = async(req, res) => {
     try {
         const users = await User.find();
         if (!users)
