@@ -102,7 +102,7 @@ const addBookingToUserHistory = async(req, res, next) => {
 
 };
 
-//FUNCTION TO ADD ADVENTURE BOOKING TO USER'S HISTORY 
+/* //FUNCTION TO ADD ADVENTURE BOOKING TO USER'S HISTORY 
 const addExperienceToUserFeedback = async(req, res, next) => {
     try {
         let feedback = [];
@@ -116,7 +116,7 @@ const addExperienceToUserFeedback = async(req, res, next) => {
         res.status(500).send({ message: "Server error, could not update history!" });
     }
 
-};
+}; */
 
 
 //FUNCTION TO RETRIEVE BOOKINGS BY THE USER
@@ -140,7 +140,7 @@ module.exports = {
     readAllUsers,
     addBookingToUserHistory,
     readBookingHistory,
-    addExperienceToUserFeedback
+    //addExperienceToUserFeedback
 };
 
 //VALIDATE INFO FROM USER USING JOI VALIDATION

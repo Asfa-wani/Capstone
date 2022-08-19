@@ -10,11 +10,11 @@ const {
     readUserExperience,
     readAllUsersExperiences,
 } = require("../controller/userExperience");
-const { userById, addExperienceToUserFeedback } = require("../controller/user");
+const { userById } = require("../controller/user");
 const { userExperienceById } = require("../controller/userExperience");
 
 //USER EXPERIENCE CRUD ROUTES
-router.post("/create/:userId", requireSignin, isAuth, addExperienceToUserFeedback, createUserExperience);
+router.post("/create/:userId", requireSignin, isAuth, createUserExperience);
 router.put("/update/:userExperienceId/:userId", requireSignin, isAuth, updateUserExperience);
 router.delete("/delete/:userExperienceId/:userId", requireSignin, isAuth, deleteUserExperience);
 router.get("/find/:userId", requireSignin, isAuth, readUserExperience);
