@@ -61,6 +61,26 @@ const readAllBookings = async(req, res) => {
     } catch (error) {
         res.status(500).send({ message: "Internal server error" });
     }
+};
+const readCompletedAdventures = async(req, res) => {
+    try {
+        const completedAdventures = await Bookings.find({ status: "completed" });
+        if (!completedAdventures)
+            return res.status(404).send({ message: "No completed adventures" });
+        res.status(200).send(completedAdventures);
+    } catch (error) {
+        res.status(500).send({ message: "Server error" });
+    }
+};
+const readPendingAdventures = async(req, res) => {
+    try {
+        const pendingAdventures = await Bookings.find({ status: "pending" });
+        if (!pendingAdventures)
+            return res.status(404).send({ message: "No completed adventures" });
+        res.status(200).send(pendingAdventures);
+    } catch (error) {
+        res.status(500).send({ message: "Server error" });
+    }
 }
 
 
@@ -76,4 +96,4 @@ const updateBookingStatus = async(req, res) => {
 };
 
 
-module.exports = { bookingById, readAllBookings, readUserBookings, createBookings, updateBookingStatus };
+module.exports = { bookingById, readAllBookings, readCompletedAdventures, readPendingAdventures, readUserBookings, createBookings, updateBookingStatus };

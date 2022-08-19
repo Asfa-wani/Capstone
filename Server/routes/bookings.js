@@ -8,6 +8,8 @@ const {
     readUserBookings,
     readAllBookings,
     readStatusValues,
+    readCompletedAdventures,
+    readPendingAdventures,
     bookingById,
     updateBookingStatus
 } = require("../controller/bookings");
@@ -20,6 +22,8 @@ router.post(
     createBookings
 );
 
+router.get("/findCompletedAdvents/:userId", requireSignin, isAuth, readCompletedAdventures, );
+router.get("/findPendingAdvents/:userId", requireSignin, isAuth, readPendingAdventures, );
 router.get("/find/:userId", requireSignin, isAuth, readUserBookings, );
 router.get("/findAll/:userId", requireSignin, isAuth, isAdmin, readAllBookings, );
 
