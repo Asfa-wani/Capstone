@@ -21,15 +21,13 @@ const userSchema = new mongoose.Schema({
     history: {
         type: Array,
         default: []
+    },
+    feedback: {
+        type: Array,
+        default: []
     }
 }, {
     timestamps: true,
-    toJSON: {
-        virtuals: true,
-    },
-    toObject: {
-        virtuals: true,
-    },
 });
 
 /* 

@@ -27,9 +27,22 @@ const userById = (req, res, next, id) => {
 //FUNCTION TO FIND ONE USER
 
 const readUser = (req, res) => {
-    user = req.profile;
+    const user = req.profile;
     res.status(200).send(user);
 }
+
+//FUNCTION TO FIND ONE USER
+const readAllUsers = (req, res) => {
+    try {
+        const users = await User.find();
+        if (!users)
+            return res.status(404).send({ message: "No users found" });
+        res.status(200).send(users);
+    } catch (error) {
+        res.status(500).send({ message: "Server error" });
+    }
+
+};
 
 
 //FUNCTION TO UPDATE USER INFO
@@ -89,6 +102,21 @@ const addBookingToUserHistory = async(req, res, next) => {
 
 };
 
+//FUNCTION TO ADD ADVENTURE BOOKING TO USER'S HISTORY 
+const addExperienceToUserFeedback = async(req, res, next) => {
+    try {
+        let feedback = [];
+        feedback.push(req.userExperience);
+        //console.log("history", history)
+        await User.findOneAndUpdate({ _id: req.profile._id }, { $push: { feedback: feedback } }, { new: true });
+        next();
+
+    } catch (error) {
+        res.status(500).send({ message: "Server error, could not update history!" });
+    }
+
+};
+
 
 //FUNCTION TO RETRIEVE BOOKINGS BY THE USER
 const readBookingHistory = async(req, res) => {
@@ -108,8 +136,10 @@ module.exports = {
     deleteUser,
     userById,
     readUser,
+    readAllUsers,
     addBookingToUserHistory,
-    readBookingHistory
+    readBookingHistory,
+    addExperienceToUserFeedback
 };
 
 //VALIDATE INFO FROM USER USING JOI VALIDATION
