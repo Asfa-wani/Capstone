@@ -46,6 +46,7 @@ const readAdventuresByCategory = async(req, res) => {
     try {
         const destination = req.adventure;
         Category = destination.category[0];
+        console.log("hello")
         const adventuresByCategory = await Adventure.find({ category: category });
         console.log("hello")
         if (!adventuresByCategory[0])
