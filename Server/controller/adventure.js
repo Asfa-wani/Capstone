@@ -47,6 +47,7 @@ const readAdventuresByCategory = async(req, res) => {
         const destination = req.adventure;
         Category = destination.category[0];
         const adventuresByCategory = await Adventure.find({ category: category });
+        console.log("hello")
         if (!adventuresByCategory[0])
             return res.status(404).send({ message: "No products for this destination found" });
         res.status(200).send(adventuresByCategory);
