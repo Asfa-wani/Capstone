@@ -32,7 +32,7 @@ const readAdventure = async(req, res) => {
 //FUNCTION TO FIND ALL THE ADVENTURES
 const readAllAdventures = async(req, res) => {
     try {
-        const adventures = await Adventures.find({});
+        const adventures = await Adventure.find({});
         if (!adventures)
             return res.status(404).send({ message: "No adventures found" });
         res.status(200).send(adventures);
