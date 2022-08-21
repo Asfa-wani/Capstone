@@ -44,6 +44,7 @@ const readAllAdventures = async(req, res) => {
 //FUNCTION TO READ ADVENTURES BY PARTICULAR CATEGORY
 const readAdventuresByCategory = async(req, res) => {
     try {
+        console.log("hello")
         const destination = req.adventure;
         Category = destination.category[0];
         console.log("hello")
